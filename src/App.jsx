@@ -12,7 +12,7 @@ export default function App() {
     function fixHand(){
         setRanking(null)
         //royal flush test hand
-        const handIds = [8,9,10,11,12] //10-J-Q-K-A of Hearts
+        const handIds = [0,13,26,39,17] //10-J-Q-K-A of Hearts
 
         setHand(deck.filter(card => handIds.includes(card.id)))
     }
@@ -35,24 +35,60 @@ export default function App() {
         setHand(deck.filter(card => handIds.includes(card.id)))
         
     }
+    
+    
 
     function checkRanking(){
        setRanking(rankings[10])
+
+        const sameSuit1 = getSameSuit(hand);
+        const sameSuit2 = getSameSuit (hand.filter(card => !sameSuit1.includes(card)));
+        const sameRank1 = getSameRank(hand);
+        const sameRank2 = getSameRank (hand.filter(card => !sameRank1.includes(card))  );
+    console.log("Same Suit 1:", sameSuit1);
+    console.log("Same Suit 2:", sameSuit2);
+    console.log("Same Rank 1:", sameRank1);
+    console.log("Same Rank 2:", sameRank2);
+
        //Royal Flush
        if (checkRoyalStraight() && getSameSuit(hand).length === 5) {
         setRanking(rankings[0])
         return
        }
        //Straight Flush
-       getCardsInRow(hand)
+       if (getSameSuit(hand).length ==5 && getCardsInRow(getSameSuit(hand)).length ==5){
+            //console.log(getSameSuit(hand).length)
+            setRanking(rankings[1])
+            return
+       }
+        //Four of a Kind
+       if (getSameRank(hand).length >= 4) {
+        setRanking(rankings[2])
+        return
+       }
+       //Full House: (Three of a kind + one pair, e.g., three Kings and two 5s)
+       
     }
 
     function getSameSuit(cards){
-        let sameSuit = []
-        for(let i=0; i<5; i++){
-            if (hand[i].suit === hand[0].suit) sameSuit.push(hand[i])
+        const sameSuit = []
+        let start = 0;
+        for(let i=start+1; i<cards.length; i++){
+            if (cards[i].suit === cards[start].suit) 
+                sameSuit.push(cards[i])
+            else start = i;
         }
-        return sameSuit
+        if (sameSuit.length >= 2)
+            return sameSuit 
+        else return []
+    }
+
+    function getSameRank(cards){
+        let sameRank = []
+        for(let i=0; i<cards.length; i++){
+            if (cards[i].rank === cards[0].rank) sameRank.push(cards[i])
+        }
+        return sameRank
     }
 
     function getCardsInRow(cards){
@@ -80,7 +116,7 @@ export default function App() {
             
        } 
        
-      console.log(cardSequences)
+      return cardsInRow
     }
 
     function checkRoyalStraight(){
