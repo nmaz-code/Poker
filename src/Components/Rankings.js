@@ -12,7 +12,6 @@ export default function Rankings(){
     rankings.push(new Ranking(8, "Two different pairs, e.g., two Aces and two 7s"))     
     rankings.push(new Ranking(9, "One Pair", "Two cards of the same rank, e.g., two Queens"))     
     rankings.push(new Ranking(10, "High Card", "If no one has any of the above, the player with the single highest card wins, e.g., Ace-high"))     
-    rankings.push(new Ranking(11, "No Ranking", "This hand bears no ranking under 'Texas Hold'm"))     
-    
+   
     return rankings
 }

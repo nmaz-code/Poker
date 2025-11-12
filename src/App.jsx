@@ -12,7 +12,7 @@ export default function App() {
     function fixHand(){
         setRanking(null)
         //royal flush test hand
-        const handIds = [0,13,26,39,17] //10-J-Q-K-A of Hearts
+        const handIds = [50,37,4,25,0] 
 
         setHand(deck.filter(card => handIds.includes(card.id)))
     }
@@ -39,35 +39,61 @@ export default function App() {
     
 
     function checkRanking(){
-       setRanking(rankings[10])
+       setRanking(rankings[9])
 
         const sameSuitGroups = getGroups("suit");
         const noOfSuitGroups = sameSuitGroups.length;
 
         const sameRankGroups = getGroups("rank");
-        const noOfSameRankGroups = sameRankGroups.length;
+        const noOfRankGroups = sameRankGroups.length;
 
-    console.log("Same Suit Grouips:", sameSuitGroups);
-    console.log("Same Rank Groups:", sameRankGroups);
-
-       //Royal Flush
+        //Royal Flush: A-K-Q-J-10, all of the same suit
        if (checkRoyalStraight() && noOfSuitGroups ===1 && sameRankGroups[0].length === 5) {
         setRanking(rankings[0])
         return
        }
-    //    //Straight Flush
-    //    if (getSameSuit(hand).length ==5 && getCardsInRow(getSameSuit(hand)).length ==5){
-    //         //console.log(getSameSuit(hand).length)
-    //         setRanking(rankings[1])
-    //         return
-    //    }
-    //     //Four of a Kind
-    //    if (getSameRank(hand).length >= 4) {
-    //     setRanking(rankings[2])
-    //     return
-    //    }
-    //    //Full House: (Three of a kind + one pair, e.g., three Kings and two 5s)
-       
+       //Straight Flush: Five cards in a row, all of the same suit, e.g., 7-8-9-10-J of Hearts
+        if (noOfSuitGroups === 1 && sameSuitGroups[0].length === 5 && getCardsInRow(hand).length === 5) {
+            setRanking(rankings[1])
+            return
+        }
+        //Four of a Kind: Four cards of the same rank, e.g., four Aces
+       if (noOfRankGroups === 1 && sameRankGroups[0].length === 4) {
+        setRanking(rankings[2])
+        return
+       }
+       //Full House: (Three of a kind + one pair, e.g., three Kings and two 5s)
+       if ((noOfRankGroups === 2 && sameSuitGroups[0].length === 3 && sameSuitGroups[1].length === 2) ||
+       (noOfRankGroups === 2 && sameSuitGroups[0].length === 2 && sameSuitGroups[1].length ===3 )) {
+        setRanking(rankings[3])
+        return
+       }
+       //Flush: (Any five cards of the same suit, not in a row, e.g., A-K-8-5-2 of Spades)
+       if (noOfSuitGroups === 1 && sameSuitGroups[0].length === 5 ) {
+            setRanking(rankings[4])
+            return
+        }
+        // Straight: (Five cards in a row, but different suits, e.g., 6-7-8-9-10)
+        if ( getCardsInRow(hand).length === 5) {
+            setRanking(rankings[5])
+            return
+        }
+        //Three of a Kind: (Three cards of the same rank, e.g., three Jacks)
+        if (noOfRankGroups >= 1 && sameRankGroups[0].length === 3) {
+        setRanking(rankings[6])
+        return
+       }
+       //Two Pair: (Two different pairs, e.g., two Aces and two 7s)
+        if (noOfRankGroups === 2 && sameSuitGroups[0].length === 2 && sameSuitGroups[1].length === 2)  {
+            setRanking(rankings[7])
+            return
+        }
+        //One Pair: (Two cards of the same rank, e.g., two Queens)
+        if (noOfRankGroups === 1 && sameSuitGroups[0].length === 2)  {
+            setRanking(rankings[8])
+            return
+        }
+
     }
 
     
@@ -104,8 +130,6 @@ export default function App() {
                 }   
                
             }
-        
-            
        } 
        
       return cardsInRow
