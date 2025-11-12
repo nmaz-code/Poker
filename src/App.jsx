@@ -41,55 +41,43 @@ export default function App() {
     function checkRanking(){
        setRanking(rankings[10])
 
-        const sameSuit1 = getSameSuit(hand);
-        const sameSuit2 = getSameSuit (hand.filter(card => !sameSuit1.includes(card)));
-        const sameRank1 = getSameRank(hand);
-        const sameRank2 = getSameRank (hand.filter(card => !sameRank1.includes(card))  );
-    console.log("Same Suit 1:", sameSuit1);
-    console.log("Same Suit 2:", sameSuit2);
-    console.log("Same Rank 1:", sameRank1);
-    console.log("Same Rank 2:", sameRank2);
+        const sameSuitGroups = getGroups("suit");
+        const sameRankGroups = getGroups("rank");
+    console.log("Same Suit Grouips:", sameSuitGroups);
+    console.log("Same Rank Groups:", sameRankGroups);
 
-       //Royal Flush
-       if (checkRoyalStraight() && getSameSuit(hand).length === 5) {
-        setRanking(rankings[0])
-        return
-       }
-       //Straight Flush
-       if (getSameSuit(hand).length ==5 && getCardsInRow(getSameSuit(hand)).length ==5){
-            //console.log(getSameSuit(hand).length)
-            setRanking(rankings[1])
-            return
-       }
-        //Four of a Kind
-       if (getSameRank(hand).length >= 4) {
-        setRanking(rankings[2])
-        return
-       }
-       //Full House: (Three of a kind + one pair, e.g., three Kings and two 5s)
+    //    //Royal Flush
+    //    if (checkRoyalStraight() && getSameSuit(hand).length === 5) {
+    //     setRanking(rankings[0])
+    //     return
+    //    }
+    //    //Straight Flush
+    //    if (getSameSuit(hand).length ==5 && getCardsInRow(getSameSuit(hand)).length ==5){
+    //         //console.log(getSameSuit(hand).length)
+    //         setRanking(rankings[1])
+    //         return
+    //    }
+    //     //Four of a Kind
+    //    if (getSameRank(hand).length >= 4) {
+    //     setRanking(rankings[2])
+    //     return
+    //    }
+    //    //Full House: (Three of a kind + one pair, e.g., three Kings and two 5s)
        
     }
 
-    function getSameSuit(cards){
-        const sameSuit = []
-        let start = 0;
-        for(let i=start+1; i<cards.length; i++){
-            if (cards[i].suit === cards[start].suit) 
-                sameSuit.push(cards[i])
-            else start = i;
+    
+    function getGroups(groupByKey){
+        if (!Array.isArray(hand) || hand.length === 0) return []
+        const groups = {}
+        for (const card of hand) {
+            const key = card?.[groupByKey] ?? 'unknown'
+            if (!groups[key]) groups[key] = []
+            groups[key].push(card)
         }
-        if (sameSuit.length >= 2)
-            return sameSuit 
-        else return []
+        return Object.values(groups).filter(group => group.length >= 2)
     }
-
-    function getSameRank(cards){
-        let sameRank = []
-        for(let i=0; i<cards.length; i++){
-            if (cards[i].rank === cards[0].rank) sameRank.push(cards[i])
-        }
-        return sameRank
-    }
+    
 
     function getCardsInRow(cards){
         
