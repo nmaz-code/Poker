@@ -42,15 +42,19 @@ export default function App() {
        setRanking(rankings[10])
 
         const sameSuitGroups = getGroups("suit");
+        const noOfSuitGroups = sameSuitGroups.length;
+
         const sameRankGroups = getGroups("rank");
+        const noOfSameRankGroups = sameRankGroups.length;
+
     console.log("Same Suit Grouips:", sameSuitGroups);
     console.log("Same Rank Groups:", sameRankGroups);
 
-    //    //Royal Flush
-    //    if (checkRoyalStraight() && getSameSuit(hand).length === 5) {
-    //     setRanking(rankings[0])
-    //     return
-    //    }
+       //Royal Flush
+       if (checkRoyalStraight() && noOfSuitGroups ===1 && sameRankGroups[0].length === 5) {
+        setRanking(rankings[0])
+        return
+       }
     //    //Straight Flush
     //    if (getSameSuit(hand).length ==5 && getCardsInRow(getSameSuit(hand)).length ==5){
     //         //console.log(getSameSuit(hand).length)
